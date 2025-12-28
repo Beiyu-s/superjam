@@ -571,26 +571,36 @@
             mobileMenu.classList.toggle('hidden');
         });
         
-        // Smooth Scrolling for Anchor Links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
-                
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
-                    
-                    // Close mobile menu if open
-                    document.getElementById('mobile-menu').classList.add('hidden');
-                }
-            });
+        // Smooth Scrolling for Internal Anchor Links Only
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    // 只拦截 href 以 # 开头且长度大于1的内部锚点
+    if (anchor.getAttribute('href').length > 1) {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                window.scrollTo({
+                    top: targetElement.offsetTop - 80, // 80px 偏移量，适合固定导航栏
+                    behavior: 'smooth'
+                });
+            }
+
+            // 关闭移动端菜单（如果打开）
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenu) {
+                mobileMenu.classList.add('hidden');
+            }
         });
+    }
+});
+
+// 所有外部链接自动在新标签页打开（可选）
+document.querySelectorAll('a[href^="http"]').forEach(link => {
+    link.setAttribute('target', '_blank');
+});
+
         
         // Music Notes Animation
         function createMusicNote() {
