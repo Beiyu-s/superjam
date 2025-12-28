@@ -1,0 +1,835 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BEIYU YI | Music Composer &amp; Vocalist</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#000000',
+                        secondary: '#ffffff',
+                        accent: '#666666',
+                    },
+                    fontFamily: {
+                        pixel: ['VT323', 'monospace', 'system-ui'],
+                    },
+                    animation: {
+                        'bounce-slow': 'bounce 2s infinite',
+                        'float': 'float 3s ease-in-out infinite',
+                        'pixel-flow': 'pixel-flow 10s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        'pixel-flow': {
+                            '0%': { transform: 'translateX(-100%)' },
+                            '100%': { transform: 'translateX(100%)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .pixel-borders {
+                box-shadow: 
+                    -4px 0 0 0 #000,
+                    4px 0 0 0 #000,
+                    0 -4px 0 0 #000,
+                    0 4px 0 0 #000;
+            }
+            .pixel-borders-white {
+                box-shadow: 
+                    -4px 0 0 0 #fff,
+                    4px 0 0 0 #fff,
+                    0 -4px 0 0 #fff,
+                    0 4px 0 0 #fff;
+            }
+            .pixel-text {
+                text-shadow: 2px 2px 0 #000;
+            }
+            .pixel-text-white {
+                text-shadow: 2px 2px 0 #fff;
+            }
+            .pixel-button {
+                image-rendering: pixelated;
+                transition: all 0.1s;
+            }
+            .pixel-button:hover {
+                transform: scale(1.05);
+            }
+            .pixel-button:active {
+                transform: scale(0.95);
+            }
+            .noise-bg {
+                background-image: url('https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/20f7dde124a54d009aa376a5b1602b16~tplv-a9rns2rl98-image.image?rcl=20251228153719056DC95D128B9BE1A875&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1769499455&x-signature=6fp7TrmJc02SWq0kSxYXptKREuk%3D');
+                background-repeat: repeat;
+                background-size: 200px;
+            }
+            .image-pixelated {
+                image-rendering: pixelated;
+                image-rendering: -moz-crisp-edges;
+                image-rendering: crisp-edges;
+            }
+            .music-note {
+                position: absolute;
+                font-size: 24px;
+                opacity: 0;
+                animation: float-note 3s ease-out forwards;
+            }
+            @keyframes float-note {
+                0% {
+                    transform: translateY(0) scale(0);
+                    opacity: 0;
+                }
+                10% {
+                    opacity: 1;
+                }
+                90% {
+                    opacity: 1;
+                }
+                100% {
+                    transform: translateY(-100px) scale(1);
+                    opacity: 0;
+                }
+            }
+        }
+    </style>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+        
+        body {
+            font-family: 'VT323', monospace;
+            image-rendering: pixelated;
+            background-color: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        .pixel-divider {
+            height: 4px;
+            background-color: #000;
+            margin: 2rem 0;
+            position: relative;
+        }
+        
+        .pixel-divider::before,
+        .pixel-divider::after {
+            content: '';
+            position: absolute;
+            height: 4px;
+            width: 4px;
+            background-color: #000;
+            top: 0;
+        }
+        
+        .pixel-divider::before {
+            left: -4px;
+        }
+        
+        .pixel-divider::after {
+            right: -4px;
+        }
+        
+        .portfolio-item {
+            transition: all 0.3s ease;
+        }
+        
+        .portfolio-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .pixel-input, .pixel-textarea {
+            background-color: #fff;
+            border: 4px solid #000;
+            padding: 8px;
+            width: 100%;
+            margin-bottom: 1rem;
+            font-family: 'VT323', monospace;
+            font-size: 1.2rem;
+        }
+        
+        .pixel-input:focus, .pixel-textarea:focus {
+            outline: none;
+            border-color: #666;
+        }
+        
+        .pixel-submit {
+            background-color: #000;
+            color: #fff;
+            border: 4px solid #fff;
+            padding: 8px 16px;
+            font-family: 'VT323', monospace;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .pixel-submit:hover {
+            background-color: #fff;
+            color: #000;
+        }
+        
+        .audio-wave {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 40px;
+            gap: 3px;
+        }
+        
+        .audio-wave .bar {
+            width: 4px;
+            height: 100%;
+            background-color: #000;
+            animation: wave 1.2s ease-in-out infinite;
+        }
+        
+        .audio-wave .bar:nth-child(2n) {
+            animation-delay: 0.1s;
+        }
+        
+        .audio-wave .bar:nth-child(3n) {
+            animation-delay: 0.2s;
+        }
+        
+        .audio-wave .bar:nth-child(4n) {
+            animation-delay: 0.3s;
+        }
+        
+        .audio-wave .bar:nth-child(5n) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes wave {
+            0%, 100% {
+                height: 10px;
+            }
+            50% {
+                height: 40px;
+            }
+        }
+        
+        .audio-wave.active .bar {
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body class="font-pixel">
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full bg-black text-white z-50 border-b-4 border-white">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <a href="#" class="text-2xl font-bold pixel-text-white">BEIYU YI</a>
+                <div class="hidden md:flex space-x-6">
+                    <a href="#about" class="hover:text-gray-400 transition">ABOUT</a>
+                    <a href="#portfolio" class="hover:text-gray-400 transition">PORTFOLIO</a>
+                    <a href="#skills" class="hover:text-gray-400 transition">SKILLS</a>
+                    <a href="#gallery" class="hover:text-gray-400 transition">GALLERY</a>
+                    <a href="#contact" class="hover:text-gray-400 transition">CONTACT</a>
+                </div>
+                <div class="md:hidden">
+                    <button id="menu-toggle" class="text-white focus:outline-none">
+                        <i class="fa fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden bg-black w-full border-t-2 border-white">
+            <div class="container mx-auto px-4 py-2">
+                <a href="#about" class="block py-2 hover:text-gray-400 transition">ABOUT</a>
+                <a href="#portfolio" class="block py-2 hover:text-gray-400 transition">PORTFOLIO</a>
+                <a href="#skills" class="block py-2 hover:text-gray-400 transition">SKILLS</a>
+                <a href="#gallery" class="block py-2 hover:text-gray-400 transition">GALLERY</a>
+                <a href="#contact" class="block py-2 hover:text-gray-400 transition">CONTACT</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="pt-24 pb-12 md:pt-32 md:pb-24 px-4 bg-black relative overflow-hidden">
+        <div class="container mx-auto flex flex-col md:flex-row items-center justify-between">
+            <div class="md:w-1/2 mb-8 md:mb-0 z-10">
+                <h1 class="text-5xl md:text-7xl font-bold mb-4 pixel-text-white">BEIYU YI</h1>
+                <h2 class="text-2xl md:text-3xl mb-6">MUSIC COMPOSER • VOCALIST • VOICE ARTIST</h2>
+                <p class="text-lg md:text-xl mb-8 max-w-lg">
+                    Jazz &amp; pop vocalist, composer, and music educator based in Los Angeles. 
+                    Passionate about emotional storytelling through sound.
+                </p>
+                <div class="flex space-x-4">
+                    <a href="#portfolio" class="pixel-button bg-white text-black px-6 py-3 text-xl border-4 border-black hover:bg-gray-200 transition">
+                        LISTEN
+                    </a>
+                    <a href="#contact" class="pixel-button bg-black text-white px-6 py-3 text-xl border-4 border-white hover:bg-gray-900 transition">
+                        CONTACT
+                    </a>
+                </div>
+            </div>
+            <div class="md:w-1/2 flex justify-center z-10">
+                <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/477371b228b44ac6b064cf329254b1ea~tplv-a9rns2rl98-image.image?rcl=20251228154059C862F766BA6BBE808319&amp;rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1767512460&amp;x-signature=TZOKhpprmIUd8irAQfcPA7FEiWs%3D" alt="BEIYU YI" class="w-64 md:w-80 image-pixelated pixel-borders animate-float">
+            </div>
+        </div>
+        <!-- Animated Music Notes -->
+        <div id="music-notes-container" class="absolute inset-0 pointer-events-none"></div>
+        
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 opacity-10 noise-bg"></div>
+    </header>
+
+    <!-- About Section -->
+    <section id="about" class="py-16 bg-white text-black">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl md:text-5xl font-bold mb-12 text-center pixel-text">ABOUT</h2>
+            <div class="flex flex-col md:flex-row gap-12">
+                <div class="md:w-1/2">
+                    <p class="text-xl mb-6">
+                        Jazz &amp; pop vocalist, composer, and music educator based in Los Angeles. 
+                        Trained in jazz and classical voice with experience in ensemble performance, 
+                        songwriting, and film music scoring.
+                    </p>
+                    <p class="text-xl mb-6">
+                        Passionate about emotional storytelling through sound, blending vocal color 
+                        with acoustic and modern textures. Able to learn new musical styles quickly 
+                        and adapt to collaborative creative environments.
+                    </p>
+                </div>
+                <div class="md:w-1/2">
+                    <h3 class="text-2xl font-bold mb-4 pixel-text">EDUCATION</h3>
+                    <ul class="text-xl mb-6 space-y-3">
+                        <li><span class="font-bold">B.M. Jazz Studies</span>, California State University Northridge — 2024</li>
+                        <li><span class="font-bold">B.M. Music Education (Classical Voice)</span>, Hunan Institute of Science and Technology — 2011</li>
+                    </ul>
+                    <h3 class="text-2xl font-bold mb-4 pixel-text">ADDITIONAL TRAINING</h3>
+                    <ul class="text-xl space-y-3">
+                        <li>Piano study with Lucy Nargizyan (East Los Angeles College)</li>
+                        <li>Jazz vocal study with Mary Durst (Pasadena City College)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="py-16 bg-black text-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl md:text-5xl font-bold mb-12 text-center pixel-text-white">PORTFOLIO</h2>
+            
+            <h3 class="text-2xl font-bold mb-6 pixel-text-white">FEATURED PROJECTS</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                <div class="portfolio-item bg-white text-black p-6 border-4 border-white">
+                    <h4 class="text-2xl font-bold mb-2">Film Score Composer</h4>
+                    <p class="text-xl mb-4">NYFA Student Film "No Small Thing" (2024)</p>
+                    <p class="mb-4">Composed original soundtrack for this student film project.</p>
+                    <a href="#" class="flex items-center justify-center w-12 h-12 bg-white text-black border-2 border-black">
+                        <i class="fa fa-youtube-play text-xl"></i>
+                    </a>
+                </div>
+                
+                <div class="portfolio-item bg-white text-black p-6 border-4 border-white">
+                    <h4 class="text-2xl font-bold mb-2">Live Performances</h4>
+                    <p class="text-xl mb-4">CSUN (2020-2024)</p>
+                    <p class="mb-4">Featured vocalist in multiple jazz ensembles across Los Angeles.</p>
+                    <a href="#" class="flex items-center justify-center w-12 h-12 bg-white text-black border-2 border-black">
+                        <i class="fa fa-youtube-play text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <h3 class="text-2xl font-bold mb-6 pixel-text-white">ENSEMBLE EXPERIENCES</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                <div class="bg-white text-black p-4 border-4 border-white text-center">
+                    <p class="text-lg">East Los Angeles Jazz band</p>
+                </div>
+                <div class="bg-white text-black p-4 border-4 border-white text-center">
+                    <p class="text-lg">East Los Angeles Symphony Orchestra</p>
+                </div>
+                <div class="bg-white text-black p-4 border-4 border-white text-center">
+                    <p class="text-lg">East Los Angeles Marching Band</p>
+                </div>
+                <div class="bg-white text-black p-4 border-4 border-white text-center">
+                    <p class="text-lg">Lancer Jazz Big Band</p>
+                </div>
+                <div class="bg-white text-black p-4 border-4 border-white text-center">
+                    <p class="text-lg">Jazzadena Vocal Ensemble</p>
+                </div>
+                <div class="bg-white text-black p-4 border-4 border-white text-center">
+                    <p class="text-lg">Pasadena City College Combo</p>
+                </div>
+                <div class="bg-white text-black p-4 border-4 border-white text-center">
+                    <p class="text-lg">CSUN Vocal Jazz Ensemble</p>
+                </div>
+                <div class="bg-white text-black p-4 border-4 border-white text-center">
+                    <p class="text-lg">CSUN Combo</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-16 bg-white text-black">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl md:text-5xl font-bold mb-12 text-center pixel-text">SKILLS</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-black text-white p-6 border-4 border-black">
+                    <h3 class="text-2xl font-bold mb-4 pixel-text-white">MUSIC &amp; CREATIVE</h3>
+                    <ul class="text-xl space-y-3">
+                        <li>Vocal performance (Jazz / Pop / Classical)</li>
+                        <li>Composition &amp; arrangement</li>
+                        <li>Songwriting &amp; vocal textures</li>
+                        <li>Piano &amp; guitar</li>
+                        <li>Music theory</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-black text-white p-6 border-4 border-black">
+                    <h3 class="text-2xl font-bold mb-4 pixel-text-white">TECHNICAL &amp; STUDIO</h3>
+                    <ul class="text-xl space-y-3">
+                        <li>Vocal tracking &amp; harmonies</li>
+                        <li>DAW experience (GarageBand, MuseScore)</li>
+                        <li>Basic recording and editing</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-black text-white p-6 border-4 border-black">
+                    <h3 class="text-2xl font-bold mb-4 pixel-text-white">ADDITIONAL</h3>
+                    <ul class="text-xl space-y-3">
+                        <li>Ensemble direction</li>
+                        <li>Teaching (Piano / Voice / Guitar / Music Theory)</li>
+                        <li>Bilingual: English / Mandarin</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mt-12">
+                <h3 class="text-2xl font-bold mb-6 text-center pixel-text" style="font-weight: bold; font-size: 32px;">AWARDS</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-black text-white p-6 border-4 border-black text-center">
+                        <p class="text-xl">3rd Place – Jazz Performance Award</p>
+                    </div>
+                    <div class="bg-black text-white p-6 border-4 border-black text-center">
+                        <p class="text-xl">Vocal Jazz Ensemble Award – For outstanding contribution</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-16 bg-white text-black">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl md:text-5xl font-bold mb-12 text-center pixel-text">GALLERY</h2>
+            
+            <!-- Featured Image -->
+            <div class="mb-12 flex justify-center">
+                <div class="bg-black p-2 border-4 border-black w-full max-w-[1080px]">
+                    <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/9aba7f424d624a709228eb937d7a5e00~tplv-a9rns2rl98-image.image?rcl=2025122816010772A2C6A2ECAEE0196CEF&amp;rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1767513667&amp;x-signature=4hR4O5Int9F9vQLBiuhmeNM%2BQew%3D" alt="Featured Image" class="w-full h-[361px] object-cover image-pixelated">
+                </div>
+            </div>
+            
+            <div class="gallery-container relative">
+                <!-- Gallery Navigation Buttons -->
+                <button class="gallery-nav prev-btn absolute top-1/2 left-0 transform -translate-y-1/2 w-12 h-12 bg-black text-white flex items-center justify-center border-4 border-black hover:bg-gray-800 transition z-10">
+                    <i class="fa fa-chevron-left text-xl"></i>
+                </button>
+                
+                <button class="gallery-nav next-btn absolute top-1/2 right-0 transform -translate-y-1/2 w-12 h-12 bg-black text-white flex items-center justify-center border-4 border-black hover:bg-gray-800 transition z-10">
+                    <i class="fa fa-chevron-right text-xl"></i>
+                </button>
+                
+                <!-- Gallery Slider -->
+                <div class="gallery-slider overflow-hidden">
+                    <div class="gallery-track flex transition-transform duration-300 ease-in-out">
+                        <!-- Gallery Items - These can be replaced with your own images -->
+                        <div class="gallery-item min-w-full md:min-w-[33.333%] p-4">
+                            <div class="bg-black p-2 border-4 border-black">
+                                <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/e1219a61bf0b469d96971236fc02c36a~tplv-a9rns2rl98-image.image?rcl=20251228155322C533390417A16EC179A8&amp;rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1767513202&amp;x-signature=rvMGHSdaXp8%2FJpXKcyBS7mHdvwU%3D" alt="Music Notes" class="w-full h-auto image-pixelated">
+                                <div class="mt-2 text-center">
+                                    <input type="text" placeholder="Image Caption" class="pixel-input bg-white text-black border-2 border-black text-sm" data-caption="1">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="gallery-item min-w-full md:min-w-[33.333%] p-4">
+                            <div class="bg-black p-2 border-4 border-black">
+                                <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/de3d5a9080ef447382bd0a5993d9cd17~tplv-a9rns2rl98-image.image?rcl=20251228155308F7FC0D5AB9F82BB15438&amp;rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1767513189&amp;x-signature=WXqEnoiqX0lJ9sAYYBHh8cLtyqU%3D" alt="Music Notes Animation" class="w-full h-auto image-pixelated">
+                                <div class="mt-2 text-center">
+                                    <input type="text" placeholder="Image Caption" class="pixel-input bg-white text-black border-2 border-black text-sm" data-caption="2">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="gallery-item min-w-full md:min-w-[33.333%] p-4">
+                            <div class="bg-black p-2 border-4 border-black">
+                                <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/8e60fc16a6d540e58dcaa01a6acbacc0~tplv-a9rns2rl98-image.image?rcl=202512281553359772F7BCD0F5699BB7A5&amp;rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1767513216&amp;x-signature=Gx6aM1aNRC22Q8bgpnqVSagVfsM%3D" alt="Music Player" class="w-full h-auto image-pixelated">
+                                <div class="mt-2 text-center">
+                                    <input type="text" placeholder="Image Caption" class="pixel-input bg-white text-black border-2 border-black text-sm" data-caption="3">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="gallery-item min-w-full md:min-w-[33.333%] p-4">
+                            <div class="bg-black p-2 border-4 border-black">
+                                <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/code_assistant/fa21379b41904baa99a6d8048ab41081~tplv-a9rns2rl98-image.image?rcl=202512281553581C4A66D812C72D893DD7&amp;rk3s=8e244e95&amp;rrcfp=e75484ac&amp;x-expires=1767513239&amp;x-signature=BlEu2mq0HdhBt5aJcxPyBBQ9FIQ%3D" alt="Pixel Pattern" class="w-full h-auto image-pixelated">
+                                <div class="mt-2 text-center">
+                                    <input type="text" placeholder="Image Caption" class="pixel-input bg-white text-black border-2 border-black text-sm" data-caption="4">
+                                </div>
+                            </div>
+                        </div>
+                        
+
+                    </div>
+                </div>
+                
+                <!-- Gallery Controls -->
+                <div class="gallery-controls flex justify-center mt-8 space-x-2">
+                    <button class="gallery-dot w-4 h-4 bg-black border-2 border-black rounded-full active" data-index="0"></button>
+                    <button class="gallery-dot w-4 h-4 bg-white border-2 border-black rounded-full" data-index="1"></button>
+                    <button class="gallery-dot w-4 h-4 bg-white border-2 border-black rounded-full" data-index="2"></button>
+                    <button class="gallery-dot w-4 h-4 bg-white border-2 border-black rounded-full" data-index="3"></button>
+                    <button class="gallery-dot w-4 h-4 bg-white border-2 border-black rounded-full" data-index="4"></button>
+                </div>
+                
+                <!-- Image Upload Button -->
+                <div class="text-center mt-8">
+                    <button id="add-image-btn" class="pixel-button bg-black text-white px-6 py-3 text-xl border-4 border-black hover:bg-gray-800 transition">
+                        <i class="fa fa-plus mr-2"></i> ADD IMAGE
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 bg-black text-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl md:text-5xl font-bold mb-12 text-center pixel-text-white">CONTACT</h2>
+            
+            <div class="flex flex-col md:flex-row gap-12">
+                <div class="md:w-1/2">
+                    <h3 class="text-2xl font-bold mb-6 pixel-text-white">GET IN TOUCH</h3>
+                    <p class="text-xl mb-8">
+                        Interested in working together? Fill out the form with some info about your project 
+                        and I will get back to you as soon as I can.
+                    </p>
+                    
+                    <div class="mb-8">
+                        <h4 class="text-xl font-bold mb-4">CONTACT INFORMATION</h4>
+                        <p class="text-lg mb-2">
+                            <i class="fa fa-envelope mr-2"></i> Beiyuyi226@gmail.com
+                        </p>
+                        <p class="text-lg">
+                            <i class="fa fa-map-marker mr-2"></i> Los Angeles, CA
+                        </p>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-xl font-bold mb-4">SOCIAL MEDIA</h4>
+                        <div class="flex space-x-4">
+                            <a href="#" class="w-12 h-12 bg-white text-black flex items-center justify-center border-4 border-white hover:bg-gray-200 transition">
+                                <i class="fa fa-instagram text-xl"></i>
+                            </a>
+                            <a href="#" class="w-12 h-12 bg-white text-black flex items-center justify-center border-4 border-white hover:bg-gray-200 transition">
+                                <i class="fa fa-youtube-play text-xl"></i>
+                            </a>
+                            <a href="#" class="w-12 h-12 bg-white text-black flex items-center justify-center border-4 border-white hover:bg-gray-200 transition">
+                                <i class="fa fa-soundcloud text-xl"></i>
+                            </a>
+                            <a href="#" class="w-12 h-12 bg-white text-black flex items-center justify-center border-4 border-white hover:bg-gray-200 transition" title="网易云音乐">
+                                <i class="fa fa-music text-xl"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="md:w-1/2">
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 bg-white text-black border-t-4 border-black">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-xl mb-4">BEIYU YI | MUSIC COMPOSER • VOCALIST • VOICE ARTIST</p>
+            <p class="text-lg">© 2025 All Rights Reserved</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // Smooth Scrolling for Anchor Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    document.getElementById('mobile-menu').classList.add('hidden');
+                }
+            });
+        });
+        
+        // Music Notes Animation
+        function createMusicNote() {
+            const container = document.getElementById('music-notes-container');
+            const note = document.createElement('div');
+            const noteSymbols = ['♪', '♫', '♩', '♬'];
+            
+            note.classList.add('music-note');
+            note.textContent = noteSymbols[Math.floor(Math.random() * noteSymbols.length)];
+            note.style.left = `${Math.random() * 100}%`;
+            note.style.top = '100%';
+            note.style.color = Math.random() > 0.5 ? '#fff' : '#000';
+            note.style.fontSize = `${Math.random() * 20 + 16}px`;
+            
+            container.appendChild(note);
+            
+            // Remove note after animation completes
+            setTimeout(() => {
+                note.remove();
+            }, 3000);
+        }
+        
+        // Create music notes at intervals
+        setInterval(createMusicNote, 2000);
+        
+
+        
+        // Link functionality
+        document.querySelectorAll('.youtube-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const inputId = this.id.replace('link', 'url');
+                const input = document.getElementById(inputId);
+                const url = input.value.trim();
+                
+                if (!url) {
+                    e.preventDefault();
+                    alert('Please enter a URL first.');
+                } else {
+                    // Update the href attribute with the URL from input
+                    this.href = url;
+                }
+            });
+        });
+        
+        // Simulate audio wave animation when page loads
+        document.querySelectorAll('.audio-wave').forEach(wave => {
+            setTimeout(() => {
+                wave.classList.add('active');
+                setTimeout(() => {
+                    wave.classList.remove('active');
+                }, 3000);
+            }, Math.random() * 2000);
+        });
+        
+        // Gallery Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const track = document.querySelector('.gallery-track');
+            const items = document.querySelectorAll('.gallery-item');
+            const dots = document.querySelectorAll('.gallery-dot');
+            const prevBtn = document.querySelector('.prev-btn');
+            const nextBtn = document.querySelector('.next-btn');
+            const addImageBtn = document.getElementById('add-image-btn');
+            
+            let currentIndex = 0;
+            const itemWidth = 100; // 100% width for mobile
+            const itemsPerView = window.innerWidth >= 768 ? 3 : 1;
+            const maxIndex = items.length - itemsPerView;
+            
+            // Update gallery position
+            function updateGallery() {
+                const translateX = -currentIndex * (itemWidth / itemsPerView);
+                track.style.transform = `translateX(${translateX}%)`;
+                
+                // Update dots
+                dots.forEach((dot, index) => {
+                    if (index === currentIndex) {
+                        dot.classList.add('bg-black');
+                        dot.classList.remove('bg-white');
+                    } else {
+                        dot.classList.remove('bg-black');
+                        dot.classList.add('bg-white');
+                    }
+                });
+                
+                // Update button states
+                prevBtn.disabled = currentIndex === 0;
+                nextBtn.disabled = currentIndex >= maxIndex;
+                
+                if (prevBtn.disabled) {
+                    prevBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                } else {
+                    prevBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+                
+                if (nextBtn.disabled) {
+                    nextBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                } else {
+                    nextBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+            }
+            
+            // Initialize gallery
+            updateGallery();
+            
+            // Event listeners
+            prevBtn.addEventListener('click', () => {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    updateGallery();
+                }
+            });
+            
+            nextBtn.addEventListener('click', () => {
+                if (currentIndex < maxIndex) {
+                    currentIndex++;
+                    updateGallery();
+                }
+            });
+            
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    currentIndex = Math.min(index, maxIndex);
+                    updateGallery();
+                });
+            });
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                const newItemsPerView = window.innerWidth >= 768 ? 3 : 1;
+                if (newItemsPerView !== itemsPerView) {
+                    itemsPerView = newItemsPerView;
+                    maxIndex = items.length - itemsPerView;
+                    currentIndex = Math.min(currentIndex, maxIndex);
+                    updateGallery();
+                }
+            });
+            
+            // Add image functionality
+            addImageBtn.addEventListener('click', () => {
+                // Create a file input element
+                const fileInput = document.createElement('input');
+                fileInput.type = 'file';
+                fileInput.accept = 'image/*';
+                
+                fileInput.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        
+                        reader.onload = (e) => {
+                            // Create new gallery item
+                            const newItem = document.createElement('div');
+                            newItem.className = 'gallery-item min-w-full md:min-w-[33.333%] p-4';
+                            
+                            const itemId = items.length + 1;
+                            
+                            newItem.innerHTML = `
+                                <div class="bg-black p-2 border-4 border-black">
+                                    <img src="${e.target.result}" alt="Uploaded Image" class="w-full h-auto image-pixelated">
+                                    <div class="mt-2 text-center">
+                                        <input type="text" placeholder="Image Caption" class="pixel-input bg-white text-black border-2 border-black text-sm" data-caption="${itemId}">
+                                    </div>
+                                </div>
+                            `;
+                            
+                            // Add to track
+                            track.appendChild(newItem);
+                            
+                            // Update items array
+                            items.push(newItem);
+                            
+                            // Create new dot
+                            const newDot = document.createElement('button');
+                            newDot.className = 'gallery-dot w-4 h-4 bg-white border-2 border-black rounded-full';
+                            newDot.dataset.index = items.length - 1;
+                            
+                            newDot.addEventListener('click', () => {
+                                currentIndex = Math.min(parseInt(newDot.dataset.index), maxIndex);
+                                updateGallery();
+                            });
+                            
+                            // Add to dots container
+                            document.querySelector('.gallery-controls').appendChild(newDot);
+                            
+                            // Update max index
+                            maxIndex = items.length - itemsPerView;
+                            
+                            // Go to new image
+                            currentIndex = items.length - itemsPerView;
+                            updateGallery();
+                        };
+                        
+                        reader.readAsDataURL(file);
+                    }
+                });
+                
+                fileInput.click();
+            });
+            
+            // Make captions editable
+            document.querySelectorAll('[data-caption]').forEach(input => {
+                input.addEventListener('blur', function() {
+                    // You could save the caption here if needed
+                    console.log(`Caption ${this.dataset.caption} updated: ${this.value}`);
+                });
+            });
+        });
+        
+        // Progress Bar Interaction
+        document.querySelectorAll('.w-48.h-2.bg-white').forEach(progressBar => {
+            progressBar.addEventListener('click', function(e) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const percentage = (x / rect.width) * 100;
+                
+                const progressFill = this.querySelector('.w-full.bg-black');
+                const progressHandle = this.querySelector('.w-4.h-4.bg-black');
+                const timeDisplay = this.closest('.pixel-music-player').querySelector('.time-display');
+                const playButton = this.closest('.pixel-music-player').querySelector('.play-btn');
+                
+                progressFill.style.width = `${percentage}%`;
+                progressHandle.style.left = `${percentage}%`;
+                
+                // Update time display
+                const totalSeconds = 210; // 3:30
+                const currentSeconds = Math.floor(totalSeconds * (percentage / 100));
+                const currentMinutes = Math.floor(currentSeconds / 60);
+                const currentRemainingSeconds = currentSeconds % 60;
+                const totalMinutes = Math.floor(totalSeconds / 60);
+                const totalRemainingSeconds = totalSeconds % 60;
+                
+                timeDisplay.textContent = `${currentMinutes}:${currentRemainingSeconds.toString().padStart(2, '0')} / ${totalMinutes}:${totalRemainingSeconds.toString().padStart(2, '0')}`;
+                
+                // If not playing, start playing
+                if (!playButton.classList.contains('playing')) {
+                    playButton.click();
+                }
+            });
+        });
+    </script>
+
+</body></html>
